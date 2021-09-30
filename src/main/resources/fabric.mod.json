@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "sizematters",
+  "version": "${version}",
+  "name": "Sizematters",
+  "description": "Are your mobs too small? Just feed them enlargement pills and see immediate results!",
+  "authors": [
+    "KaloyanKYS"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/sizematters/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.kaloyankys.sizematters.client.SizeModClient"
+    ],
+    "main": [
+      "me.kaloyankys.sizematters.SizeMod"
+    ]
+  },
+  "mixins": [
+    "sizematters.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.7",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}

@@ -27,14 +27,10 @@ public abstract class MobEntityMixin extends Entity implements SizeOfMob {
     private void interactWithSize(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (player.getStackInHand(hand).getItem() == SizeMod.ENLARGEMENT_PILL) {
             if (mobSize < 6.9f) {
-                mobSize = mobSize + 0.1f;
-                this.setSize(mobSize);
+                this.enlarge();
             }
             else {
-                mobSize = 1.0f;
-                this.getEntityWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(),
-                        3.5f, false, Explosion.DestructionType.BREAK);
-                this.kill();
+                this.explode();
             }
             if (!player.isCreative()) {
                 player.getStackInHand(hand).decrement(1);
@@ -42,14 +38,10 @@ public abstract class MobEntityMixin extends Entity implements SizeOfMob {
         }
         else if (player.getStackInHand(hand).getItem() == SizeMod.SHRINKING_PILL) {
             if(mobSize > 0.05f) {
-                mobSize = mobSize - 0.025f;
-                this.setSize(mobSize);
+                this.shrink();
             }
             else {
-                mobSize = 1.0f;
-                this.getEntityWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(),
-                        3.5f, false, Explosion.DestructionType.BREAK);
-                this.kill();
+                this.explode();
             }
             if(!player.isCreative()) {
                 player.getStackInHand(hand).decrement(1);
@@ -65,6 +57,23 @@ public abstract class MobEntityMixin extends Entity implements SizeOfMob {
     @Override
     public float getSize() {
         return this.mobSize;
+    }
+
+    public void enlarge() {
+        mobSize = mobSize + 0.1f;
+        this.setSize(mobSize);
+    }
+
+    public void shrink() {
+        mobSize = mobSize - 0.025f;
+        this.setSize(mobSize);
+    }
+
+    public void explode() {
+        mobSize = 1.0f;
+        this.getEntityWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(),
+                3.5f, false, Explosion.DestructionType.BREAK);
+        this.kill();
     }
 }
 

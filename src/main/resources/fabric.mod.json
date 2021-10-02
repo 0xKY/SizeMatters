@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "sizematters",
-  "version": "${version}",
+  "version": "1.1.0",
   "name": "Sizematters",
   "description": "Are your mobs too small? Just feed them enlargement pills and see immediate results!",
   "authors": [

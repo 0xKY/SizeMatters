@@ -2,59 +2,53 @@ package me.kaloyankys.sizematters.mixin;
 
 import me.kaloyankys.sizematters.SizeMod;
 import me.kaloyankys.sizematters.SizeOfMob;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(MobEntity.class)
-public abstract class MobEntityMixin extends Entity implements SizeOfMob {
+@Mixin(PlayerEntity.class)
+public abstract class PlayerEntityMixin extends LivingEntity implements SizeOfMob {
+
+
+    @Shadow
+    public abstract boolean isCreative();
 
     private float mobSize = 1.0f;
-    private int yawAngle = 0;
 
-    public MobEntityMixin(EntityType<?> entityType, World world) {
+    public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    @Inject(at = @At("HEAD"), method = "interactMob", cancellable = true)
-    private void interactWithSize(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (player.getStackInHand(hand).getItem() == SizeMod.ENLARGEMENT_PILL) {
+    @Inject(at = @At("HEAD"), method = "eatFood", cancellable = true)
+    private void interactWithSize(World world, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+        if (stack.getItem() == SizeMod.ENLARGEMENT_PILL) {
             if (mobSize < 6.9f) {
                 this.enlarge();
-            }
-            else {
+            } else {
                 this.explode();
             }
-            if (!player.isCreative()) {
-                player.getStackInHand(hand).decrement(1);
-            }
+        if (!this.isCreative()) {
+            stack.decrement(1);
         }
-        else if (player.getStackInHand(hand).getItem() == SizeMod.SHRINKING_PILL) {
-            if(mobSize > 0.05f) {
+    } else if (stack.getItem() == SizeMod.SHRINKING_PILL) {
+            if (mobSize > 0.05f) {
                 this.shrink();
-            }
-            else {
+            } else {
                 this.explode();
             }
-            if(!player.isCreative()) {
-                player.getStackInHand(hand).decrement(1);
+            if (!this.isCreative()) {
+                stack.decrement(1);
             }
-        }
-        else if (player.getStackInHand(hand).getItem() == SizeMod.ROTATION_PILL) {
-            yawAngle = yawAngle + 10;
-            this.setRotation(yawAngle, yawAngle);
         }
     }
-
     @Override
     public void setSize(float size) {
         this.mobSize = size;
@@ -63,11 +57,6 @@ public abstract class MobEntityMixin extends Entity implements SizeOfMob {
     @Override
     public float getSize() {
         return this.mobSize;
-    }
-
-    @Override
-    public float getYaw() {
-        return this.yawAngle;
     }
 
     public void enlarge() {
@@ -87,4 +76,3 @@ public abstract class MobEntityMixin extends Entity implements SizeOfMob {
         this.kill();
     }
 }
-

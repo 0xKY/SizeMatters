@@ -4,10 +4,12 @@
   "package": "me.kaloyankys.sizematters.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MobEntityMixin"
+    "MobEntityMixin",
+    "PlayerEntityMixin"
   ],
   "client": [
-    "MobEntityRendererMixin"
+    "MobEntityRendererMixin",
+    "PlayerEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

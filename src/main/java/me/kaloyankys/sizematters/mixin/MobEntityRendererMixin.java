@@ -10,6 +10,8 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +26,11 @@ public abstract class MobEntityRendererMixin<T extends MobEntity, M extends Enti
     }
     @Inject(at = @At("HEAD"), method = "render", cancellable = true)
     private void renderResized(T mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
-            matrixStack.scale(((SizeOfMob) mobEntity).getSize(), ((SizeOfMob) mobEntity).getSize(), ((SizeOfMob) mobEntity).getSize());
-
+        //Rotate
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(((SizeOfMob) mobEntity).getYaw()));
+        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(((SizeOfMob) mobEntity).getYaw()));
+        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(((SizeOfMob) mobEntity).getYaw()));
+        //Scale
+        matrixStack.scale(((SizeOfMob) mobEntity).getSize(), ((SizeOfMob) mobEntity).getSize(), ((SizeOfMob) mobEntity).getSize());
     }
 }

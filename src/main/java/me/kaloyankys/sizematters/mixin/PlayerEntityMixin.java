@@ -17,9 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements SizeOfMob {
 
-
     @Shadow
     public abstract boolean isCreative();
+
+    @Shadow public abstract void jump();
 
     private float mobSize = 1.0f;
 
